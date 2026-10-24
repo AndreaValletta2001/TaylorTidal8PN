@@ -16,8 +16,7 @@ The dimensionless quantities are `Lambda2=lambda2/m^5` and
 
 Source: [Jiménez Forteza et al., Eq. (22), Table I](https://arxiv.org/abs/1807.08016).
 Zero electric deformability is mapped to zero magnetic deformability;
-negative or nonfinite inputs are rejected. The fits need not remain accurate
-at very high `Lambda2`, beyond their calibrated regime.
+negative or nonfinite inputs are rejected.
 
 ## Electric octupole
 
@@ -30,11 +29,6 @@ Lambda3 = 0.23214267180912393 * Lambda2**1.345740158802329
 Its input data were digitized and fitted with a power law; the data and
 reproducible fitting script are provided in
 [`examples/fit_octupole_qur.py`](../examples/fit_octupole_qur.py) (requires SciPy).
-These numerical coefficients are **not** the quartic-polynomial coefficients
-published in [Yagi (2014)](https://arxiv.org/abs/1311.0872), which is a
-reference for multipolar Love relations. The function
-`lambda3_over_lambda_fit` is a compatibility alias that returns `Lambda3`,
-not the ratio `Lambda3/Lambda2`.
 
 ## Spin-induced quadrupole
 
