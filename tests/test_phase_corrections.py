@@ -59,6 +59,47 @@ class PhaseCorrections(unittest.TestCase):
                 v=(np.pi*w.g_newton*2.8*w.solar_m*f/w.light_s**3)**(1/3)
                 np.testing.assert_allclose(actual,-3/(128*eta)*c*v*v,rtol=1e-8,atol=5e-10)
 
+    def test_seven_pn_electric_quadrupole(self):
+        # Henry, Faye & Blanchet (2020) with Erratum, arXiv:2005.13367v4:
+        # general SPA phase of Sec. VI and, separately, its equal-mass form.
+        for name in ENGINES:
+            with self.subTest(engine=name):
+                w=importlib.import_module('tln_waveforms.'+name)
+                f=np.array([30.,200.,800.])
+                for eta,lt,dlt in [(.24,500.,10.),(.2,300.,-40.)]:
+                    args=dict(frequency_array=f,total_mass=2.8*w.solar_m,eta=eta,chi_s=0.,chi_a=0.,
+                              lambda_tilde=lt,delta_lambda_tilde=dlt,include_octupole_7pn=False)
+                    actual=w.pn_phase(**args,tidal_pn_order=7)-w.pn_phase(**args,tidal_pn_order=6.5)
+                    X=(1+np.sqrt(1-4*eta))/2;Y=1-X
+                    l1,l2=w.lambda_conv(lt,dlt,2.8*X,2.8*Y)
+                    mp=(Y*X**4*l1+X*Y**4*l2)/2;mm=(Y*X**4*l1-X*Y**4*l2)/2
+                    c=-9/(16*eta**2)*((136190135/27433728+978554825/4572288*eta-281935/6048*eta**2+5/3*eta**3)*mp
+                                      +(X-Y)*(136190135/27433728+213905/2592*eta+1585/1296*eta**2)*mm)
+                    v=(np.pi*w.g_newton*2.8*w.solar_m*f/w.light_s**3)**(1/3)
+                    np.testing.assert_allclose(actual,-c*v**9,rtol=1e-8,atol=1e-10)
+                # Equal bodies: psi = -(117/2) mu v^5 [... + 29323235/3429216 mu v^4], mu = Lambda/32.
+                np.testing.assert_allclose(w.coeffLT(1.4,1.4),-117/64*29323235/3429216,rtol=1e-12)
+
+    def test_spin_induced_quadrupole_small_lambda(self):
+        # Below Lambda=1 the fit is frozen at its Lambda=1 value; zero is a black hole.
+        for name in ENGINES:
+            with self.subTest(engine=name):
+                w=importlib.import_module('tln_waveforms.'+name)
+                for L in [1e-8,1e-4,.5,1.]:
+                    self.assertAlmostEqual(w.quadrupole_from_loveq(L),np.exp(.194),places=12)
+                self.assertEqual(w.quadrupole_from_loveq(0.),1)
+
+    def test_numpy_error_state_is_untouched(self):
+        for name in ENGINES:
+            with self.subTest(engine=name):
+                w=importlib.import_module('tln_waveforms.'+name)
+                with np.errstate(divide='warn',invalid='warn'):
+                    before=np.geterr()
+                    w.Taylor_f2_APR(np.array([0.,20.,100.]),chirp_mass=1.2,eta=.24,chi_1=0.,chi_2=0.,
+                                    lambda_tilde=400.,delta_lambda_tilde=0.,phase=0.,luminosity_distance=100.,
+                                    theta_jn=.5,minimum_frequency=20.)
+                    self.assertEqual(np.geterr(),before)
+
 
     def test_rotational_tidal_love_numbers(self):
         for name in ENGINES:

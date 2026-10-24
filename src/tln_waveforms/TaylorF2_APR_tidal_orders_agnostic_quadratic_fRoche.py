@@ -157,74 +157,45 @@ def const_tilt_fit(lambda_1, lambda_2, mass_1, mass_2):
 def quadrupole_from_loveq(lambda_i):
     if lambda_i!=0:
 
-        # Quadrupoles for a NS
-        kappa=np.exp(0.194+0.0936*np.log(lambda_i)+0.0474*np.log(lambda_i)**2-0.00421*np.log(lambda_i)**3+0.000123*np.log(lambda_i)**4)
+        # Quadrupoles for a NS. The fit diverges as Lambda -> 0 (kappa ~ 1e10
+        # at Lambda = 1e-6), so it is evaluated at Lambda >= 1, below any NS.
+        z = np.log(max(lambda_i, 1.0))
+        kappa=np.exp(0.194+0.0936*z+0.0474*z**2-0.00421*z**3+0.000123*z**4)
     else: 
         # Quadrupoles for a Kerr BH
         kappa=1
     return kappa
 
+def compute_electric_quadrupole_7pn(mass_1, mass_2, lambda_1, lambda_2):
+    """7PN (NNL) electric-quadrupole tidal coefficient of v^9 in the phase.
+
+    Henry, Faye & Blanchet, Phys. Rev. D 102, 044033 (2020), SPA phase of
+    Sec. VI, including the corrections of the Erratum (arXiv:2005.13367v4).
+    With mu_A = m_A^5 Lambda_A, mu_pm = (m2/m1 mu_1 +- m1/m2 mu_2)/(2 M^5).
+    This is a direct phase coefficient: no 3/(128*eta) prefactor is applied.
+    """
+    M = mass_1 + mass_2
+    X1 = mass_1 / M
+    X2 = mass_2 / M
+    nu = X1 * X2
+    Delta = X1 - X2
+
+    mu_plus = 0.5 * (X2 * X1**4 * lambda_1 + X1 * X2**4 * lambda_2)
+    mu_minus = 0.5 * (X2 * X1**4 * lambda_1 - X1 * X2**4 * lambda_2)
+
+    c_plus = (136190135/27433728 + 978554825/4572288*nu
+              - 281935/6048*nu**2 + 5/3*nu**3)
+    c_minus = 136190135/27433728 + 213905/2592*nu + 1585/1296*nu**2
+
+    return -9 / (16 * nu**2) * (c_plus * mu_plus + Delta * c_minus * mu_minus)
+
 def coeffLT(m1,m2):
-
-    coeff=-((65* (21611492613344* m1**7* m2**7 + 
-       m1**9* m2**5* (10428768938839 - 
-          43814217454759* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       m1**8* m2**6* (15470917703235 - 
-          33918687590159* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       10263034799* m1**14* (-1 + np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       10263034799* m2**14* (1 + np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       m1**13* m2* (-335019131039 + 
-          355545200637* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       m1* m2**13* (335019131039 + 
-          355545200637* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       2* m1**12* m2**2* (-819046975731 + 
-          473764809893* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       2* m1**2* m2**12* (819046975731 + 
-          473764809893* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       8* m1**11* m2**3* (-972540478103 + 
-          1295743424509* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       8* m1**3* m2**11* (972540478103 + 
-          1295743424509* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       2* m1**10* m2**4* (-5652897706259 + 
-          14829997660300* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       2* m1**4* m2**10* (5652897706259 + 
-          14829997660300* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       m1**6* m2**8* (15470917703235 + 
-          33918687590159* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       m1**5* m2**9* (10428768938839 + 
-          43814217454759* np.sqrt((m1 - m2)**2/(m1 + 
-             m2)**2))))/(260112384* m1* m2* (m1 + 
-       m2)**2* (258102* m1**5* m2**5 + 
-       1319* m1**10* (-1 + np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       1319* m2**10* (1 + np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       26* m1**7* m2**3* (-715 + 8841* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       26* m1**3* m2**7* (715 + 8841* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       m1**9* m2* (-6513 + 9151* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       m1* m2**9* (6513 + 9151* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       13* m1**4* m2**6* (-1801 + 18053* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       13* m1**6* m2**4* (1801 + 18053* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       2* m1**8* m2**2* (-56735 + 48903* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       2* m1**2* m2**8* (56735 + 48903* np.sqrt((m1 - m2)**2/(m1 + m2)**2)))))
-
-    return coeff
+    """Coefficient of lambda_tilde in compute_electric_quadrupole_7pn."""
+    return compute_electric_quadrupole_7pn(m1, m2, *lambda_conv(1.0, 0.0, m1, m2))
 
 def coeffDLT(m1,m2):
-
-    coeff=-((6595* m1**3* (m1 - m2)* m2**3* (8394865* m1**4 - 227924178* m1**3* m2 - 
-       498223654* m1**2* m2**2 - 227924178* m1* m2**3 + 
-       8394865* m2**4))/(1354752* (m1 + m2)* (258102* m1**5* m2**5 + 
-       1319* m1**10* (-1 + np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       1319* m2**10* (1 + np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       26* m1**7* m2**3* (-715 + 8841* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       26* m1**3* m2**7* (715 + 8841* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       m1**9* m2* (-6513 + 9151* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       m1* m2**9* (6513 + 9151* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       13* m1**4* m2**6* (-1801 + 18053* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       13* m1**6* m2**4* (1801 + 18053* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) - 
-       2* m1**8* m2**2* (-56735 + 48903* np.sqrt((m1 - m2)**2/(m1 + m2)**2)) + 
-       2* m1**2* m2**8* (56735 + 48903* np.sqrt((m1 - m2)**2/(m1 + m2)**2)))))
-
-    return coeff
+    """Coefficient of delta_lambda_tilde in compute_electric_quadrupole_7pn."""
+    return compute_electric_quadrupole_7pn(m1, m2, *lambda_conv(0.0, 1.0, m1, m2))
 
 
 
@@ -399,6 +370,7 @@ def compute_dynamic_love_8PN_terms(v, mass_1, mass_2, eta, lambda0_1, lambda0_2,
 # pn_phase_order=-1 includes the implemented point-particle/spin terms.
 # Nonspinning terms stop at 3.5PN; the spin-orbit tail reaches 4PN.
 # tidal_pn_order separately selects the implemented tidal sectors.
+@np.errstate(divide='ignore', invalid='ignore')
 def pn_phase(
     frequency_array,
     total_mass,
@@ -435,9 +407,6 @@ def pn_phase(
     pp_phase_terms = np.zeros((9, len(v)))
     spin_phase_terms = np.zeros((9, len(v)))
     tidal_phase_terms = np.zeros((5, len(v)))
-    
-    np.seterr(divide='ignore')
-    np.seterr(invalid='ignore')
     
     # Masses computation
     M_ad = total_mass/solar_m
@@ -570,12 +539,11 @@ def pn_phase(
     tidal_phase_terms[2] = lambda_hat + sigma_hat + gamma_hat + kappa_hat
 
     # Electric quadrupole and optional electric octupole (7PN).
-    # coeffLT/coeffDLT and the octupole coefficient are direct coefficients
+    # The electric quadrupole and octupole coefficients are direct coefficients
     # of v^9 in the phase. The common prefactor is compensated below.
     if float(tidal_pn_order) >= 7.0:
-        tidal_phase_terms[3] = (
-            coeffLT(mass_1, mass_2) * lambda_tilde
-            + coeffDLT(mass_1, mass_2) * delta_lambda_tilde
+        tidal_phase_terms[3] = compute_electric_quadrupole_7pn(
+            mass_1, mass_2, lambda_1, lambda_2
         )
         if include_octupole_7pn:
             oct_term = -(X1**5 * L31 + X2**5 * L32)
@@ -630,6 +598,7 @@ def pn_phase(
 
     ########################### WAVEFORM ###############################
 
+@np.errstate(divide='ignore', invalid='ignore')
 def Taylor_f2_APR(frequency_array, chirp_mass, eta, chi_1, chi_2,\
                  lambda_tilde, delta_lambda_tilde,
                  phase, luminosity_distance, theta_jn, tilt_1=0., tilt_2=0., phi_12=0., phi_jl=0., **kwargs):
@@ -674,22 +643,7 @@ def Taylor_f2_APR(frequency_array, chirp_mass, eta, chi_1, chi_2,\
 
     # Mass, beta, quadrupole and tidal def.
     mass_1, mass_2 = mass_components(chirp_mass,eta)
-    eta1, eta2 = mass_1/(mass_1+mass_2), mass_2/(mass_1+mass_2)
 
-    # =========================
-    # RECONSTRUCT SIGMA FROM LAMBDA (QUASI-UNIVERSAL)
-    # =========================
-
-    lambda_1, lambda_2 = lambda_conv(lambda_tilde, delta_lambda_tilde, mass_1, mass_2)
-
-    # Reconstruct magnetic Love numbers from the selected published relation.
-    sigma_1 = sigma_from_lambda_fit(lambda_1, fluid=magnetic_fluid)
-    sigma_2 = sigma_from_lambda_fit(lambda_2, fluid=magnetic_fluid)
-
-    sigma_tilde = compute_sigma_tilde(eta1, eta2, sigma_1, sigma_2)
-    
-    l_3_1 = lambda3_from_lambda_fit(lambda_1)
-    l_3_2 = lambda3_from_lambda_fit(lambda_2)
     # Conversion to SI units                                      
     l_dist = luminosity_distance*m_parsec
     m_tot = mass_1 + mass_2                        

@@ -9,8 +9,8 @@ python examples/generate_waveform.py
 ```
 
 The unit tests check selected phase coefficients, spin tails, magnetic tidal
-terms, rotational tidal Love numbers (including their zero default), input
-limits and public waveform interfaces.
+terms, the 7PN electric quadrupole, rotational tidal Love numbers (including
+their zero default), input limits and public waveform interfaces.
 
 These checks test implementation consistency. They do not independently
 validate the accuracy of the phenomenological tidal relations outside their

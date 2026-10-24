@@ -7,8 +7,3 @@ dist/
 .venv/
 *.png
 *.npz
-
-waveform_example.npz
-
-waveform_example.npz
-*.npz

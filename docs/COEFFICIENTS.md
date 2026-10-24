@@ -81,17 +81,26 @@ is in [QUR.md](QUR.md). Rotational tidal Love numbers are zero by default.
 The 6.5PN gamma_hat expression follows Jimenez Forteza et al., Eq. (10).
 Optional RTLNs are normalized by m_i**4; see QUR.md.
 
-The implemented 7PN electric-sector direct phase
-coefficient is
+The implemented 7PN electric-sector direct phase coefficient is the mass
+quadrupole and mass octupole part of the SPA phase in
+[Henry, Faye & Blanchet, Sec. VI](https://arxiv.org/abs/2005.13367), including
+the corrections of their Erratum (arXiv v4). With
+`mu_plus/minus = (X_2*X_1^4*Lambda_1 +/- X_1*X_2^4*Lambda_2)/2`:
 
 ```text
-C7 = coeffLT(m1,m2)*lambda_tilde + coeffDLT(m1,m2)*delta_lambda_tilde
+C7 = -9/(16*eta^2) * [
+       (136190135/27433728 + 978554825/4572288*eta
+        - 281935/6048*eta^2 + 5/3*eta^3) * mu_plus
+     + delta*(136190135/27433728 + 213905/2592*eta
+              + 1585/1296*eta^2) * mu_minus ]
      - (125/12)*(X_1^5*Lambda3_1 + X_2^5*Lambda3_2)
 ```
 
-The exact rational mass functions are included in each engine under `coeffLT`
-and `coeffDLT`. The final line is omitted in the no-octupole model. These are
-already coefficients of `v^9`: no additional `3/(128*eta)` is applied to C7.
+`coeffLT` and `coeffDLT` return the equivalent coefficients of `lambda_tilde`
+and `delta_lambda_tilde`. The final line is omitted in the no-octupole model.
+The 7PN magnetic term and the 7.5PN tails of the same reference are not
+included. These are already coefficients of `v^9`: no additional
+`3/(128*eta)` is applied to C7.
 
 ## Selected 8PN sectors
 

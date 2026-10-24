@@ -37,7 +37,9 @@ kappa = exp(0.194 + 0.0936*z + 0.0474*z**2 - 0.00421*z**3 + 0.000123*z**4)
 z = ln(Lambda2)
 ```
 
-For `Lambda2=0` the implementation uses `kappa=1`.
+For `Lambda2=0` the implementation uses `kappa=1`. The fit diverges as
+`Lambda2 -> 0` (`kappa ~ 1e10` at `Lambda2=1e-6`), so for `0<Lambda2<1`,
+below any neutron star, it is evaluated at `Lambda2=1`.
 Source: [Yagi and Yunes, Eq. (54), Table I](https://arxiv.org/abs/1303.1528).
 
 ## Quadratic 8PN tidal response
@@ -62,7 +64,8 @@ mu_rs=0.01: ln(D) = 3.9171 + 1.0707*z + 0.023100*z**2
 beta2 = -(64/45) * (1 + 321*Lambda2/112)
 ```
 
-The phase engine uses `mu_rs=1` unless changed explicitly.
+The phase engines always use `mu_rs=1`; the `mu_rs=0.01` fit is available
+only through `dynamic_love_from_lambda0`.
 Source: [Apostolidis et al.](https://arxiv.org/abs/2606.19446).
 The no-running models set `beta2=0` in both the finite and logarithmic parts;
 `include_dynamic_log=False` removes only the explicit logarithm.

@@ -48,7 +48,7 @@ accepts total mass in kg.
 | Function or module | Included tidal contributions |
 | --- | --- |
 | `waveform_6p5pn` | Electric quadrupole at 5PN/6PN; magnetic quadrupole at 6PN; tidal tail and spin-tidal terms at 6.5PN |
-| `waveform_7pn` | 6.5PN model plus selected electric quadrupole and octupole terms at 7PN |
+| `waveform_7pn` | 6.5PN model plus the electric quadrupole and octupole terms at 7PN |
 | `waveform_7pn_nooct` | 7PN model without the electric octupole |
 | `waveform_8pn` | 7PN model plus selected quadratic and dynamical 8PN terms |
 | `waveform_8pn_quadratic` | Quadratic 8PN term only, on top of the 7PN model |

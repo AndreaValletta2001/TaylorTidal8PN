@@ -8,16 +8,16 @@ from tln_waveforms import TaylorF2_APR_tidal_orders_fRoche as wf
 ENGINES=['TaylorF2_APR_tidal_orders_fRoche','TaylorF2_APR_tidal_orders_agnostic_quadratic_fRoche','TaylorF2_APR_tidal_orders_agnostic_total_norunning_fRoche']
 PARAMS=dict(chirp_mass=1.2,eta=.24,chi_1=.03,chi_2=-.01,lambda_tilde=400.,delta_lambda_tilde=0.,phase=0.,luminosity_distance=100.,theta_jn=.5,reference_frequency=100.,minimum_frequency=20.,maximum_frequency=1000.)
 
-def test_published_magnetic_fit(L):
+def check_published_magnetic_fit(L):
     x=math.log(L)
     expected=-math.exp(-2.03+.487*x+.00969*x*x+.00103*x**3-9.37e-5*x**4+2.24e-6*x**5)
     np.testing.assert_allclose(sigma_from_lambda_fit(L),expected,rtol=2e-14)
     assert sigma_from_lambda_fit(L,'static')>0
 
-def test_invalid_love_numbers(bad):
+def check_invalid_love_numbers(bad):
     with unittest.TestCase().assertRaises(ValueError):sigma_from_lambda_fit(bad)
 
-def test_magnetic_phase_terms_and_waveform_options(engine):
+def check_magnetic_phase_terms_and_waveform_options(engine):
     mod=importlib.import_module('tln_waveforms.'+engine)
     f=np.array([20.,100.,300.,700.]);eta=.24;mt=2.8
     args=dict(frequency_array=f,total_mass=mt*mod.solar_m,eta=eta,chi_s=.01,chi_a=.02,lambda_tilde=400.,delta_lambda_tilde=0.)
@@ -40,7 +40,7 @@ def test_magnetic_phase_terms_and_waveform_options(engine):
         np.testing.assert_allclose(abs(ir[pol]),abs(st[pol]),rtol=1e-13,atol=1e-40)
         assert np.isfinite(ir[pol]).all()
 
-def test_all_public_models_and_relative_binning(name):
+def check_all_public_models_and_relative_binning(name):
     mod=importlib.import_module('tln_waveforms.TaylorF2_APR_'+name+'_fRoche')
     f=np.array([10.,20.,100.,300.,700.,1100.])
     params=dict(PARAMS)
@@ -53,7 +53,7 @@ def test_all_public_models_and_relative_binning(name):
         assert h[pol][0]==h[pol][-1]==0
         np.testing.assert_array_equal(b[pol],h[pol][1:5])
 
-def test_no_tide_and_equal_mass_limits():
+def check_no_tide_and_equal_mass_limits():
     assert sigma_from_lambda_fit(0)==0
     h=wf.Taylor_f2_APR(np.array([20.,100.,300.]),**(PARAMS|dict(eta=.25,lambda_tilde=0.,delta_lambda_tilde=0.)))
     assert all(np.isfinite(x).all() for x in h.values())
@@ -61,17 +61,17 @@ def test_no_tide_and_equal_mass_limits():
 class WaveformChecks(unittest.TestCase):
     def test_polynomial(self):
         for L in [1.,10.,100.,300.,1000.,1e4,1e5]:
-            with self.subTest(L=L): test_published_magnetic_fit(L)
+            with self.subTest(L=L): check_published_magnetic_fit(L)
     def test_invalid(self):
         for bad in [-1.,float('nan'),float('inf')]:
-            with self.subTest(bad=bad): test_invalid_love_numbers(bad)
+            with self.subTest(bad=bad): check_invalid_love_numbers(bad)
     def test_magnetic_engines(self):
         for engine in ENGINES:
-            with self.subTest(engine=engine): test_magnetic_phase_terms_and_waveform_options(engine)
+            with self.subTest(engine=engine): check_magnetic_phase_terms_and_waveform_options(engine)
     def test_public_models(self):
         for name in ['6p5PN','7PN','7PN_nooct','8PN_complete','8PN_quadratic','8PN_dynamic','8PN_complete_norunning','8PN_complete_agnostic_quadratic','8PN_complete_agnostic_total_norunning']:
-            with self.subTest(model=name): test_all_public_models_and_relative_binning(name)
+            with self.subTest(model=name): check_all_public_models_and_relative_binning(name)
     def test_limits(self):
-        test_no_tide_and_equal_mass_limits()
+        check_no_tide_and_equal_mass_limits()
 
 if __name__ == '__main__': unittest.main()
