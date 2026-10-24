@@ -24,8 +24,7 @@ units and selects the 6.5, 7 or 8PN models.
 
 ## Point-particle and spin sectors
 
-Nonspinning coefficients run through 3.5PN; this is not a full 4PN
-point-particle approximant. The source retains the aligned-spin orbit, spin-spin,
+The source retains the aligned-spin orbit, spin-spin,
 spin-induced quadrupole and cubic-spin coefficients.
 The cubic-spin terms retain their inherited black-hole-like prescription;
 no independent neutron-star spin-induced octupole QUR is introduced.
