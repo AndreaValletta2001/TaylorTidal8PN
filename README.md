@@ -61,19 +61,9 @@ respective modules in `tln_waveforms`.
 
 ## Conventions and limitations
 
-- The nonspinning point-particle phase is implemented through 3.5PN, with
-  selected aligned-spin contributions through 4PN. This is **not** a complete
-  point-particle 4PN waveform.
-- The 6.5PN rotational tidal Love-number phase formula is implemented;
-  eight optional component coefficients default to zero. No rotational QUR is
-  imposed. Nonzero inputs use the normalization in [QUR.md](docs/QUR.md).
 - The magnetic response is irrotational by default; a static-fluid QUR is
   also available. These prescriptions should not be conflated with those
   for rotational Love numbers.
-- The model has selected tidal terms through 8PN, **not all** tidal terms at
-  every intervening order: in particular, the 7.5PN tidal tail is absent.
-- Spin-induced multipoles beyond the spin quadrupole are not modeled with a
-  generic neutron-star equation-of-state-dependent prescription.
 - `include_dynamic_log=False` suppresses the explicit 8PN logarithm only;
   the separate no-running model sets the running beta coefficients to zero
   also in the finite contribution.
@@ -81,9 +71,6 @@ respective modules in `tln_waveforms`.
   analysis band. The public strain interface does not automatically choose
   a Roche cutoff or apply a taper; these must be supplied consistently by
   the calling analysis.
-- Quasi-universal tidal relations, particularly at high deformability,
-  may be used beyond their calibration regime. Numerical precision of an
-  implementation does not establish waveform accuracy in that regime.
 
 For conventions, equations, and references see
 [phase coefficients](docs/COEFFICIENTS.md), [tidal relations](docs/QUR.md),
