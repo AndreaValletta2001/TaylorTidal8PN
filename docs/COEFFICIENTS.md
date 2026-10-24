@@ -125,7 +125,3 @@ The no-running models set beta_i=0 in both finite and logarithmic terms.
 The default selected 8PN coefficient is the sum of the quadratic and dynamical
 parts. The free `lambda_8pn_quadratic` replaces Q8; the free
 `lambda_8pn_total` replaces `3*Q8+F8(beta=0)`, with coefficient `-(15/11)`.
-
-The model name `complete` refers to these selected sectors. It does not assert
-PN completeness: for example, there is no 7.5PN tidal-tail term. Empirical QURs
-are extrapolated in the large-Lambda subsolar regime, as discussed in QUR.md.
