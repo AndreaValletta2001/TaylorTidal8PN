@@ -10,9 +10,9 @@ The dimensionless quantities are `Lambda2=lambda2/m^5` and
 `ln(abs(Sigma2)) = sum_n a_n ln(Lambda2)^n`, with coefficients:
 
 | Fluid state | Sign of Sigma2 | a0 | a1 | a2 | a3 | a4 | a5 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Irrotational (default) | negative | -2.03 | 0.487 | 0.00969 | 0.00103 | -0.0000937 | 0.00000224 |
-| Static | positive | -2.66 | 0.786 | -0.01 | 0.00128 | -0.0000637 | 0.00000118 |
+|:---|:---:|---:|---:|---:|---:|---:|---:|
+| Irrotational (default) | Negative | -2.03 | 0.487 | 0.00969 | 0.00103 | -0.0000937 | 0.00000224 |
+| Static | Positive | -2.66 | 0.786 | -0.01 | 0.00128 | -0.0000637 | 0.00000118 |
 
 Source: [Jiménez Forteza et al., Eq. (22), Table I](https://arxiv.org/abs/1807.08016).
 Zero electric deformability is mapped to zero magnetic deformability;
