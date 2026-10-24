@@ -3,9 +3,7 @@
 Sigma = sigma_2 / m**5 in G=c=1; natural logarithms.
 Irrotational is the inspiral default. Static is an explicit comparison branch.
 Zero maps to zero as the no-tide convention (the fit itself requires Lambda>0).
-No refitting or file/plot side effects occur at import. Application to subsolar
-stars with very large Lambda extrapolates the regime illustrated in the paper;
-this function does not establish fit accuracy there.
+No refitting or file/plot side effects occur at import.
 """
 import numpy as np
 
