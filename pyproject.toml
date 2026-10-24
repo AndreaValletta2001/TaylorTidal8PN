@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tln-waveforms"
+version = "0.1.0rc2"
+description = "TaylorF2 with selected tidal sectors through 8PN and explicit QURs"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "bilby>=2.5,<3"]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
