@@ -23,17 +23,33 @@ Source: [Jiménez Forteza et al., Eq. (22), Table I](https://arxiv.org/abs/1807.
 Zero electric deformability is mapped to zero magnetic deformability;
 negative or nonfinite inputs are rejected.
 
+
 ## Electric octupole
 
-The model uses the power-law approximation
+The electric octupolar tidal deformability is determined from the quadrupolar
+tidal deformability using the multipolar tidal Love quasi-universal relation
+of Yagi (2014).
+
+The relation is expressed as a fourth-order polynomial in the natural
+logarithm of the dimensionless quadrupolar deformability:
 
 ```math
-\Lambda_3 = 0.23214267180912393\; \Lambda_2^{\,1.345740158802329} .
+\ln \Lambda_3 =
+-1.15
++ 1.18 \ln \Lambda_2
++ 0.0251 (\ln \Lambda_2)^2
+- 0.00131 (\ln \Lambda_2)^3
++ 0.0000252 (\ln \Lambda_2)^4.
 ```
 
-Its input data were digitized and fitted with a power law; the data and
-reproducible fitting script are provided in
-[`examples/fit_octupole_qur.py`](../examples/fit_octupole_qur.py) (requires SciPy).
+Equivalently, Lambda_3 is obtained by exponentiating the polynomial.
+
+The relation is applied independently to each component of the binary.
+For Lambda_2 = 0, the implementation sets Lambda_3 = 0, corresponding
+to the black-hole limit. Negative tidal deformabilities are rejected.
+
+Reference: Yagi (2014), multipole tidal Love relations,
+arXiv:1311.0872.
 
 ## Spin-induced quadrupole
 
